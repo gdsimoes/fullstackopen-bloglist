@@ -5,6 +5,7 @@
     "scripts": {
         "start": "node index.js",
         "dev": "nodemon index.js",
+        "lint": "eslint .",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Guilherme Dias Simoes",
@@ -16,6 +17,10 @@
         "mongoose": "^8.6.2"
     },
     "devDependencies": {
+        "@eslint/js": "^9.10.0",
+        "@stylistic/eslint-plugin-js": "^2.8.0",
+        "eslint": "^9.10.0",
+        "globals": "^15.9.0",
         "nodemon": "^3.1.4"
     }
 }
