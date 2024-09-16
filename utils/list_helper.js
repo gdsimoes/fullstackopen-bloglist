@@ -42,6 +42,27 @@ function mostBlogs(blogs) {
     return result;
 }
 
+function mostLikes(blogs) {
+    if (blogs.length === 0) {
+        return null;
+    }
+
+    const authors = new Map();
+
+    for (const { author, likes } of blogs) {
+        authors.set(author, (authors.get(author) ?? 0) + likes);
+    }
+
+    let result = { likes: -Infinity };
+    for (const [author, likes] of authors) {
+        if (result.likes < likes) {
+            result = { author, likes };
+        }
+    }
+
+    return result;
+}
+
 // For testing
 // const blogs = [
 //     {
@@ -101,4 +122,5 @@ module.exports = {
     totalLikes,
     favoriteBlog,
     mostBlogs,
+    mostLikes,
 };
