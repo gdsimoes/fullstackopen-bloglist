@@ -31,6 +31,13 @@ test("all blogs are returned", async () => {
     assert.strictEqual(response.body.length, helper.initialBlogs.length);
 });
 
+test("blog posts have id and not _id", async () => {
+    const response = await api.get("/api/blogs");
+
+    assert.ok(response.body[0].id);
+    assert.ok(!response.body[0]._id);
+});
+
 after(async () => {
     await mongoose.connection.close();
 });
