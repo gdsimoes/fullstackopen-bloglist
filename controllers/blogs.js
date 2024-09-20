@@ -6,12 +6,12 @@ blogsRouter.get("/", async (req, res) => {
     res.json(blogs);
 });
 
-blogsRouter.post("/", (req, res) => {
+// I probably should check if the blog is valid before saving it.
+blogsRouter.post("/", async (req, res) => {
     const blog = new Blog(req.body);
 
-    blog.save().then((result) => {
-        res.status(201).json(result);
-    });
+    const savedBlog = await blog.save();
+    res.status(201).json(savedBlog);
 });
 
 module.exports = blogsRouter;
