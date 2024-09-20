@@ -1,4 +1,5 @@
 const express = require("express");
+require("express-async-errors");
 const cors = require("cors");
 const connectToDatabase = require("./utils/database");
 const middleware = require("./utils/middleware");
