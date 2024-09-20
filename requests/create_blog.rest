@@ -2,9 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Física, Matemática e Outras Bobagens",
+    "title": "Xenoblog",
     "author": "Guilherme Dias Simões",
-    "url": "https://gdsimoes.com",
-    "likes": 17
+    "url": "https://gdsimoes.com"
 }
 

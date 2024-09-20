@@ -66,6 +66,25 @@ test("a valid blog can be added ", async () => {
     );
 });
 
+test("a blog without likes property will have a default of 0", async () => {
+    const newBlog = {
+        title: "Física, Matemática e Outras Bobagens",
+        author: "Guilherme Dias Simões",
+        url: "https://gdsimoes.com",
+    };
+
+    await api
+        .post("/api/blogs")
+        .send(newBlog)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    const blogOnDb = blogsAtEnd.find((blog) => blog.url === newBlog.url);
+
+    assert.strictEqual(blogOnDb.likes, 0);
+});
+
 after(async () => {
     await mongoose.connection.close();
 });
