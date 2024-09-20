@@ -8,6 +8,7 @@ const app = require("../app");
 const api = supertest(app);
 
 const Blog = require("../models/blog");
+const { url } = require("node:inspector");
 
 beforeEach(async () => {
     await Blog.deleteMany({});
@@ -83,6 +84,32 @@ test("a blog without likes property will have a default of 0", async () => {
     const blogOnDb = blogsAtEnd.find((blog) => blog.url === newBlog.url);
 
     assert.strictEqual(blogOnDb.likes, 0);
+});
+
+test("blog without title or url properties responds with status code 400", async () => {
+    const blogWithoutTitle = {
+        author: "Guilherme Dias Simões",
+        url: "https://gdsimoes.com",
+        likes: 17,
+    };
+
+    await api
+        .post("/api/blogs")
+        .send(blogWithoutTitle)
+        .expect(400)
+        .expect("Content-Type", /application\/json/);
+
+    const blogWithoutUrl = {
+        title: "Física, Matemática e Outras Bobagens",
+        author: "Guilherme Dias Simões",
+        likes: 17,
+    };
+
+    await api
+        .post("/api/blogs")
+        .send(blogWithoutUrl)
+        .expect(400)
+        .expect("Content-Type", /application\/json/);
 });
 
 after(async () => {

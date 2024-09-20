@@ -4,6 +4,7 @@ Content-Type: application/json
 {
     "title": "Xenoblog",
     "author": "Guilherme Dias Simões",
-    "url": "https://gdsimoes.com"
+    "url": "https://gdsimoes.com",
+    "likes": 17
 }
 
