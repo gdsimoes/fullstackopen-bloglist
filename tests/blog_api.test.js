@@ -55,7 +55,7 @@ test("a valid blog can be added ", async () => {
     const blogsAtEnd = await helper.blogsInDb();
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
 
-    assert(
+    assert.ok(
         blogsAtEnd.some(
             (blog) =>
                 blog.title === newBlog.title &&
@@ -85,7 +85,7 @@ test("a blog without likes property will have a default of 0", async () => {
     assert.strictEqual(blogOnDb.likes, 0);
 });
 
-test("blog without title or url properties responds with status code 400", async () => {
+test("a blog without title or url properties responds with status code 400", async () => {
     const blogWithoutTitle = {
         author: "Guilherme Dias Simões",
         url: "https://gdsimoes.com",
@@ -109,6 +109,36 @@ test("blog without title or url properties responds with status code 400", async
         .send(blogWithoutUrl)
         .expect(400)
         .expect("Content-Type", /application\/json/);
+});
+
+test("a blog can be deleted", async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToDelete = blogsAtStart[1];
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1);
+
+    assert.ok(blogsAtEnd.every((blog) => blog.id !== blogToDelete.id));
+});
+
+test("the likes property can be updated", async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToUpdate = blogsAtStart[2];
+
+    const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 };
+
+    await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(updatedBlog)
+        .expect(200)
+        .expect("Content-Type", /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    const blogOnDb = blogsAtEnd.find((blog) => blog.id === blogToUpdate.id);
+
+    assert.strictEqual(blogOnDb.likes, updatedBlog.likes);
 });
 
 after(async () => {

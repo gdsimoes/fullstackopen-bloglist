@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/66eddeee2d46fff2ff8f38e9
+Content-Type: application/json
+
+{
+    "title": "Xenoblog 2",
+    "author": "Gui",
+    "url": "https://gdsimoes.com/blog",
+    "likes": 7
+}
