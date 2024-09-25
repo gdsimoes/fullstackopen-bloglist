@@ -9,19 +9,8 @@ blogsRouter.get("/", async (req, res) => {
     res.json(blogs);
 });
 
-const getTokenFrom = (req) => {
-    const authorization = req.get("authorization");
-
-    if (authorization && authorization.startsWith("Bearer ")) {
-        return authorization.replace("Bearer ", "");
-    } else {
-        return null;
-    }
-};
-
-// Should throw error if token is invalid
 blogsRouter.post("/", async (req, res) => {
-    const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+    const decodedToken = jwt.verify(req.token, process.env.SECRET);
     const user = await User.findById(decodedToken?.id);
     if (!user) {
         throw { name: "JsonWebTokenError", message: "token invalid" };

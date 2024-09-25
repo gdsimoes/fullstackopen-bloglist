@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdkc2ltb2VzIiwiaWQiOiI2NmYzNWEwYWNkMzlmYmNiZDU2YTUzNTgiLCJpYXQiOjE3MjcyODUzNzF9.O_Gr2bLmjLM93uznxT8nQVDaFHGvB0O9RPvWAumNyE4
 
 {
-    "title": "Xenoblog 18",
+    "title": "Xenoblog 19",
     "author": "Guilherme Dias Simões",
     "url": "https://gdsimoes.com",
     "likes": 17
