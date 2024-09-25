@@ -175,6 +175,64 @@ describe("when there is initially one user in db", () => {
         assert(usernames.includes(newUser.username));
     });
 
+    test("creation fails with invalid username", async () => {
+        const noUsernameUser = {
+            name: "Guilherme Dias Simões",
+            password: "123456",
+        };
+
+        const noUsernameUserResponse = await api
+            .post("/api/users")
+            .send(noUsernameUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+
+        assert(noUsernameUserResponse.body.error.includes("Path `username` is required"));
+
+        const invalidUsernameUser = {
+            username: "gd",
+            name: "Guilherme Dias Simões",
+            password: "123456",
+        };
+
+        const invalidUsernameUserResponse = await api
+            .post("/api/users")
+            .send(invalidUsernameUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+
+        assert(invalidUsernameUserResponse.body.error.includes("is shorter than the minimum allowed length (3)"));
+    });
+
+    test("creation fails with invalid password", async () => {
+        const noPasswordUser = {
+            username: "gdsimoes",
+            name: "Guilherme Dias Simões",
+        };
+
+        const noPasswordUserResponse = await api
+            .post("/api/users")
+            .send(noPasswordUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+
+        assert(noPasswordUserResponse.body.error.includes("Password must be a string"));
+
+        const invalidPasswordUser = {
+            username: "gdsimoes",
+            name: "Guilherme Dias Simões",
+            password: "12",
+        };
+
+        const invalidPasswordUserResponse = await api
+            .post("/api/users")
+            .send(invalidPasswordUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+
+        assert(invalidPasswordUserResponse.body.error.includes("Password must be at least 3 characters"));
+    });
+
     test("creation fails with proper statuscode and message if username already taken", async () => {
         const usersAtStart = await helper.usersInDb();
 
