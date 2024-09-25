@@ -26,7 +26,30 @@ blogsRouter.post("/", async (req, res) => {
 });
 
 blogsRouter.delete("/:id", async (req, res) => {
-    await Blog.findByIdAndDelete(req.params.id);
+    const blog = await Blog.findById(req.params.id);
+
+    // If blog does not exist, return 204 to make the request idempotent
+    if (!blog) {
+        return res.status(204).end();
+    }
+
+    const decodedToken = jwt.verify(req.token, process.env.SECRET);
+    const user = await User.findById(decodedToken?.id);
+    if (!user) {
+        throw { name: "JsonWebTokenError", message: "token invalid" };
+    }
+
+    if (blog.user.toString() !== user.id.toString()) {
+        throw { name: "ForbiddenAccess", message: "user is not the creator of the blog" };
+    }
+
+    // Remove blog from user's blogs
+    user.blogs = user.blogs.filter((id) => id.toString() !== blog.id.toString());
+    await user.save();
+
+    // Remove blog from database
+    await blog.deleteOne();
+
     res.status(204).end();
 });
 

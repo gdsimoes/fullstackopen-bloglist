@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdkc2ltb2VzIiwiaWQiOiI2NmYzNWEwYWNkMzlmYmNiZDU2YTUzNTgiLCJpYXQiOjE3MjcyODUzNzF9.O_Gr2bLmjLM93uznxT8nQVDaFHGvB0O9RPvWAumNyE4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImdkcyIsImlkIjoiNjZmM2NmNDRmZDFmMmNhN2RlMDA2MjhjIiwiaWF0IjoxNzI3MjkwMjM1LCJleHAiOjE3MjcyOTM4MzV9.Rqcj-HT6gGN4QVG37f9oaeWW90L0OewikUAimnKiBMg
 
 {
-    "title": "Xenoblog 19",
-    "author": "Guilherme Dias Simões",
+    "title": "Xenoblog 20",
+    "author": "Gui",
     "url": "https://gdsimoes.com",
     "likes": 17
 }
