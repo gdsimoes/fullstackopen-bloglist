@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken");
+const User = require("../models/user");
+
 const logger = require("./logger");
 
 const requestLogger = (req, res, next) => {
@@ -20,6 +23,17 @@ const tokenExtractor = (req, res, next) => {
     next();
 };
 
+const userExtractor = async (req, res, next) => {
+    if (req.token !== null) {
+        const decodedToken = jwt.verify(req.token, process.env.SECRET);
+        req.user = await User.findById(decodedToken?.id);
+    } else {
+        req.user = null;
+    }
+
+    next();
+};
+
 const unknownEndpoint = (req, res) => {
     res.status(404).send({ error: "unknown endpoint" });
 };
@@ -34,7 +48,7 @@ const errorHandler = (error, req, res, next) => {
     } else if (error.name === "InvalidCredentials") {
         return res.status(401).json({ error: error.message });
     } else if (error.name === "JsonWebTokenError") {
-        return res.status(401).json({ error: "token invalid" });
+        return res.status(401).json({ error: error.message });
     } else if (error.name === "TokenExpiredError") {
         return res.status(401).json({ error: "token expired" });
     } else if (error.name === "ForbiddenAccess") {
@@ -47,6 +61,7 @@ const errorHandler = (error, req, res, next) => {
 module.exports = {
     requestLogger,
     tokenExtractor,
+    userExtractor,
     unknownEndpoint,
     errorHandler,
 };
