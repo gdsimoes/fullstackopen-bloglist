@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdkc2ltb2VzIiwiaWQiOiI2NmYzNWEwYWNkMzlmYmNiZDU2YTUzNTgiLCJpYXQiOjE3MjcyOTc4MzEsImV4cCI6MTcyNzMwMTQzMX0.DeLaR4yMtypOvnIly8ZSrI4ZPtjy10QTWKMFjiULnWE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imdkc2ltb2VzIiwiaWQiOiI2NmYzNWEwYWNkMzlmYmNiZDU2YTUzNTgiLCJpYXQiOjE3MjczNjE3MzQsImV4cCI6MTcyNzM2NTMzNH0.wwGFSZBCZ3mtJgqEflDwIjqERHj1nSeEBmYs3JSxFOo
 
 {
-    "title": "Xenoblog 17",
+    "title": "Xenoblog 22",
     "author": "Gui",
     "url": "https://gdsimoes.com",
     "likes": 17

@@ -3,6 +3,7 @@ const assert = require("node:assert");
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const helper = require("./test_helper");
 const app = require("../app");
@@ -11,11 +12,27 @@ const api = supertest(app);
 const Blog = require("../models/blog");
 const User = require("../models/user");
 
+let token;
+
 beforeEach(async () => {
+    await User.deleteMany({});
+
+    const passwordHash = await bcrypt.hash("sekret", 10);
+    const user = new User({ username: "root", passwordHash });
+    await user.save();
+
+    const userForToken = {
+        username: user.username,
+        id: user._id,
+    };
+
+    // token expires in 60*60 seconds, that is, in one hour
+    token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60 * 60 });
+
     await Blog.deleteMany({});
 
     for (const blog of helper.initialBlogs) {
-        const blogObject = new Blog(blog);
+        const blogObject = new Blog({ ...blog, user: user._id.toString() });
         await blogObject.save();
     }
 });
@@ -40,7 +57,7 @@ test("blog posts have id and not _id", async () => {
     assert.ok(!response.body[0]._id);
 });
 
-test("a valid blog can be added ", async () => {
+test("a valid blog can be added", async () => {
     const newBlog = {
         title: "Física, Matemática e Outras Bobagens",
         author: "Guilherme Dias Simões",
@@ -50,6 +67,7 @@ test("a valid blog can be added ", async () => {
 
     await api
         .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect("Content-Type", /application\/json/);
@@ -77,6 +95,7 @@ test("a blog without likes property will have a default of 0", async () => {
 
     await api
         .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect("Content-Type", /application\/json/);
@@ -96,6 +115,7 @@ test("a blog without title or url properties responds with status code 400", asy
 
     await api
         .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
         .send(blogWithoutTitle)
         .expect(400)
         .expect("Content-Type", /application\/json/);
@@ -108,6 +128,7 @@ test("a blog without title or url properties responds with status code 400", asy
 
     await api
         .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
         .send(blogWithoutUrl)
         .expect(400)
         .expect("Content-Type", /application\/json/);
@@ -117,7 +138,7 @@ test("a blog can be deleted", async () => {
     const blogsAtStart = await helper.blogsInDb();
     const blogToDelete = blogsAtStart[1];
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+    await api.delete(`/api/blogs/${blogToDelete.id}`).set("Authorization", `Bearer ${token}`).expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1);
